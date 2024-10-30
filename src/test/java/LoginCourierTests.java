@@ -32,6 +32,7 @@ public class LoginCourierTests {
         createCourier(courier);
         Response loginResponse = loginCourier(courier);
         verifySuccessfulLogin(loginResponse);
+        id = loginResponse.as(CourierId.class).getId();
     }
 
     @Step("Создаем случайного курьера")
@@ -43,6 +44,7 @@ public class LoginCourierTests {
     private void createCourier(Courier courier) {
         Response response = courierClient.create(courier);
         assertEquals("Неверный статус код при создании курьера", SC_CREATED, response.statusCode());
+        id = response.as(CourierId.class).getId();
     }
 
     @Step("Авторизуем курьера")
@@ -181,8 +183,6 @@ public class LoginCourierTests {
         assertEquals("Неверный статус код", SC_NOT_FOUND, loginResponse.statusCode());
         assertTrue(loginResponse.getBody().asString().contains("Учетная запись не найдена"));
     }
-
-
 
 
     @Test

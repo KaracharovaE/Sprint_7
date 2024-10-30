@@ -7,6 +7,7 @@ import io.restassured.response.Response;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import sprint7.CourierId;
 
 import static org.junit.Assert.assertTrue;
 import static sprint7.CourierGenerator.randomCourier;
@@ -32,6 +33,8 @@ public class CreateCourierTests {
         Courier courier = createRandomCourier();
         Response response = createCourierAndAssert(courier, SC_CREATED);
         verifyResponseContainsTrue(response);
+        Response loginResponse = courierClient.login(courier);
+        id = loginResponse.as(CourierId.class).getId();
     }
 
     @Step("Создаем случайного курьера")
@@ -58,6 +61,8 @@ public class CreateCourierTests {
         Courier courier = randomCourier();
 
         Response firstResponse = createCourierAndAssert(courier, SC_CREATED);
+        Response loginResponse = courierClient.login(courier);
+        id = loginResponse.as(CourierId.class).getId();
         Response secondResponse = createCourierAndAssert(courier, SC_CONFLICT);
         verifyConflictResponse(secondResponse);
     }
